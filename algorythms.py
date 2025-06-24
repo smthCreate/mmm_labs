@@ -642,4 +642,40 @@ def adam_method(f, x0, step_size=0.001, max_iter=1000, tol=1e-6,
         message = f"Предупреждение: Достигнуто максимальное число итераций {max_iter}"
 
     return x, n_iter, n_fev, n_gev, converged, divergence, message, history
+def conjugate_gradient_quadratic(A, b, x0, tol=1e-6, max_iter=None):
+    """
+    Метод сопряженных градиентов для квадратичной функции
 
+    Параметры:
+    A, b - параметры квадратичной функции
+    x0 - начальная точка
+    tol - точность
+    max_iter - максимальное число итераций
+
+    Возвращает:
+    x - решение
+    iterations - число итераций
+    """
+    if max_iter is None:
+        max_iter = len(b)
+
+    x = x0.copy()
+    r = b - A @ x
+    p = r.copy()
+    iterations = 0
+
+    for _ in range(max_iter):
+        iterations += 1
+        Ap = A @ p
+        alpha = np.dot(r, r) / np.dot(p, Ap)
+        x = x + alpha * p
+        r_new = r - alpha * Ap
+
+        if np.linalg.norm(r_new) < tol:
+            break
+
+        beta = np.dot(r_new, r_new) / np.dot(r, r)
+        p = r_new + beta * p
+        r = r_new
+
+    return x, iterations
