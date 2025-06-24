@@ -1,6 +1,7 @@
 from algorythms import (
     momentum_method,nesterov_method,adagrad_method,adadelta_method,rmsprop_method,adam_method)
 from to_csv_stepsize import to_csv_stepsize
+from rosenbrock_level_graphs import plot_optimization_trajectories
 
 def data_forming(to_csv_stepsize):
     # x**2 + 0.5*x*y + y**2 - 3*x + 4*y + 1 u=1
@@ -43,5 +44,11 @@ def data_forming(to_csv_stepsize):
             )
         except Exception as e:
             print(f"Ошибка при выполнении {algo_name}: {str(e)}")
+    plot_optimization_trajectories(
+        functions=functions,
+        x0=x0,
+        algorithms=algorithms,
+        save_to_file=True
+    )
 if __name__ == "__main__":
     data_forming(to_csv_stepsize)
