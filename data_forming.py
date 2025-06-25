@@ -44,6 +44,7 @@ def data_forming(to_csv_stepsize):
             )
         except Exception as e:
             print(f"Ошибка при выполнении {algo_name}: {str(e)}")
+
     plot_optimization_trajectories(
         functions=functions,
         x0=x0,
