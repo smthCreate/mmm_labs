@@ -79,11 +79,3 @@ def visualize_results(dim_range, cond_range, adam_results, cg_results):
     plt.tight_layout()
     plt.show()
 
-# Параметры исследования
-dimensions = [10, 20, 50, 100]  # Размерности
-condition_numbers = [1, 10, 100, 1000, 10000, 100000]
-# Проводим исследование с использованием вашего steepest_descent
-adam_res, cg_res = study_iterations_with_custom_sd(dimensions, condition_numbers)
-
-# Визуализируем результаты
-visualize_results(dimensions, condition_numbers, adam_res, cg_res)
