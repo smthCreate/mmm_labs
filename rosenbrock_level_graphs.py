@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 
-def plot_optimization_trajectories(functions, x0, algorithms, step_size=0.001, save_to_file=False):
+def plot_optimization_trajectories(functions, x0, algorithms, step_size=0.01, save_to_file=False):
     """
     Визуализирует траектории оптимизации для всех переданных алгоритмов
 

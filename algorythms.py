@@ -314,7 +314,6 @@ def adadelta_method(f, x0, step_size=1.0, max_iter=1000, tol=1e-6,
                    divergence_threshold=1e10, rho=0.95, epsilon=1e-6, h=1e-5):
     """
     AdaDelta (Adaptive Delta) метод с численным градиентом
-
     Параметры:
     ----------
     f : callable
@@ -335,7 +334,6 @@ def adadelta_method(f, x0, step_size=1.0, max_iter=1000, tol=1e-6,
         Малая константа для численной стабильности (по умолчанию 1e-6).
     h : float, optional
         Шаг для численного градиента (по умолчанию 1e-5).
-
     Возвращает:
     -----------
     x : np.array
@@ -365,7 +363,6 @@ def adadelta_method(f, x0, step_size=1.0, max_iter=1000, tol=1e-6,
     converged = False
     divergence = False
     message = "Good"
-
     # Начальное значение функции
     prev_f_value = f(x)
     n_fev += 1
@@ -403,14 +400,12 @@ def adadelta_method(f, x0, step_size=1.0, max_iter=1000, tol=1e-6,
         n_fev += 1
 
         # Проверка на расходимость
-        if (abs(current_f_value) > divergence_threshold or
-            np.any(np.isnan(x_new)) or
-            np.any(np.isinf(x_new))):
+        if abs(current_f_value) > divergence_threshold or np.any(np.isnan(x_new)) or np.any(np.isinf(x_new)):
             divergence = True
             message = f"Предупреждение: Алгоритм расходится на итерации {n_iter}!"
             break
 
-        # Проверка на сходимость
+        # Проверка на сходимость по изменению x
         if np.linalg.norm(x_new - x) < tol:
             converged = True
             break
@@ -420,7 +415,7 @@ def adadelta_method(f, x0, step_size=1.0, max_iter=1000, tol=1e-6,
         n_iter += 1
         prev_f_value = current_f_value
 
-    if not converged and not divergence and n_iter == max_iter:
+    if not converged and not divergence and n_iter == max_iter - 1:
         message = f"Предупреждение: Достигнуто максимальное число итераций {max_iter}"
 
     return x, n_iter, n_fev, n_gev, converged, divergence, message, history

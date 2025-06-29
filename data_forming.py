@@ -1,6 +1,7 @@
 from algorythms import (
     momentum_method,nesterov_method,adagrad_method,adadelta_method,rmsprop_method,adam_method)
 from to_csv_stepsize import to_csv_stepsize
+from analyze_precision_dependence import analyze_precision_dependence
 from rosenbrock_level_graphs import plot_optimization_trajectories
 
 def data_forming(to_csv_stepsize):
@@ -44,6 +45,8 @@ def data_forming(to_csv_stepsize):
             )
         except Exception as e:
             print(f"Ошибка при выполнении {algo_name}: {str(e)}")
+
+
 
     plot_optimization_trajectories(
         functions=functions,

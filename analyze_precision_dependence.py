@@ -8,11 +8,12 @@ from pathlib import Path
 def load_specific_csv_files():
     """
     Загружает данные из CSV файлов методов оптимизации из папки results.
+    Фильтрует только те строки, где converged=True.
     Обрабатывает файлы: adagrad, adam, momentum, nesterov, rmsprop, adadelta.
 
     Возвращает:
         dict: Словарь с данными, где ключи - названия методов,
-              значения - списки словарей с параметрами оптимизации
+              значения - списки словарей с параметрами оптимизации (только сошедшиеся)
     """
     data = {}
     results_dir = Path("results")
@@ -42,6 +43,10 @@ def load_specific_csv_files():
             reader = csv.DictReader(f)
             for row in reader:
                 try:
+                    # Пропускаем строки, где нет сходимости
+                    if row['converged'] != 'True':
+                        continue
+
                     # Разбираем координаты минимума
                     min_coords = tuple(map(float, row['min'].split(',')))
 
@@ -54,7 +59,7 @@ def load_specific_csv_files():
                         'n_iter': safe_int(row['n_iter']),
                         'n_fev': safe_int(row['n_fev']),
                         'n_gev': safe_int(row['n_gev']),
-                        'converged': row['converged'] == 'True',
+                        'converged': True,
                         'time': safe_float(row['time_sec'])
                     }
                     data[method].append(processed_row)
@@ -90,7 +95,15 @@ def analyze_precision_dependence(data, precisions=None):
     results = {}
     for func_name in {d['function'] for method_data in data.values() for d in method_data}:
         results[func_name] = {}
+
         for method_name in data.keys():
+            # Проверяем, есть ли данные для данного метода и функции
+            method_data = [d for d in data[method_name] if d['function'] == func_name]
+
+            if not method_data:
+                print(f"Предупреждение: Нет данных для метода '{method_name}' и функции '{func_name}'")
+                continue
+
             results[func_name][method_name] = {
                 'precision': [],
                 'n_iter': [],
@@ -99,7 +112,6 @@ def analyze_precision_dependence(data, precisions=None):
             }
 
             # Собираем данные для текущей функции и метода
-            method_data = [d for d in data[method_name] if d['function'] == func_name]
             for precision in precisions:
                 # Находим запись с наиболее близким шагом к требуемой точности
                 closest = min(method_data, key=lambda x: abs(x['step'] - precision))
@@ -114,8 +126,7 @@ def analyze_precision_dependence(data, precisions=None):
         print(f"\n\nАнализ зависимости от точности для функции: {func_name}")
         print("="*80)
 
-        # Выводим таблицы
-        print_tables(func_data, precisions)
+        # print_tables(func_data, precisions)
 
         # Строим графики
         plot_precision_dependence(func_data, func_name)

@@ -44,14 +44,18 @@ def study_iterations_with_custom_sd(dim_range, cond_range, trials=5, tol=1e-6):
 
     return adam_results, cg_results
 
-def visualize_results(dim_range, cond_range, adam_results, cg_results):
+
+def visualize_results(dim_range, cond_range, adam_results, cg_results, filename='results/iteration_comparison.png'):
     """
-    Визуализирует результаты исследования
+    Визуализирует результаты исследования и сохраняет их в файл.
+
     Параметры:
+    ----------
     dim_range - диапазон размерностей
     cond_range - диапазон чисел обусловленности
-    sd_results - результаты для SD
-    cg_results - результаты для CG
+    adam_results - результаты для метода Адама
+    cg_results - результаты для метода сопряженных градиентов
+    filename - путь и имя файла для сохранения графика
     """
     # Создаем сетку для 3D графиков
     D, C = np.meshgrid(dim_range, np.log10(cond_range))
@@ -76,6 +80,14 @@ def visualize_results(dim_range, cond_range, adam_results, cg_results):
     ax2.set_zlabel('Число итераций')
     fig.colorbar(surf2, ax=ax2, shrink=0.5, aspect=5)
 
+    # Автоматически создаём папку results, если её нет
+    import os
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+    # Сохраняем график в файл
     plt.tight_layout()
-    plt.show()
+    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.close()
+
+    print(f"График успешно сохранён в файл: {filename}")
 

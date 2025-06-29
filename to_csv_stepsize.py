@@ -5,7 +5,7 @@ import re
 import os
 from pathlib import Path
 
-def to_csv_stepsize(functions, step_sizes, x0, gradient_descent_func, timeout=60):
+def to_csv_stepsize(functions, step_sizes, x0, gradient_descent_func, timeout=120):
     """
     Сохраняет результаты градиентного спуска в CSV файл в папке results.
     Создает папку, если она не существует.
